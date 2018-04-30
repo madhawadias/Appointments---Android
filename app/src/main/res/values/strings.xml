@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Appointments</string>
+    <string name="delete">delete</string>
+    <string name="search">search</string>
+</resources>

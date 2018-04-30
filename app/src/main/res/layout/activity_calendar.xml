@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalendarActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_orange_dark"
+        app:layout_constraintBottom_toTopOf="@+id/calendarView"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </android.support.v7.widget.Toolbar>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/floatbutsearch"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="52dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="22dp"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--app:backgroundTint="@android:color/holo_orange_dark"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/floatbutmove"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:srcCompat="@drawable/calbut"-->
+        <!--tools:ignore="MissingConstraints" />-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/floatbutmove"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="52dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="22dp"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--app:backgroundTint="@android:color/holo_orange_dark"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/floatbutdelete"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:srcCompat="@drawable/calbut"-->
+        <!--tools:ignore="MissingConstraints" />-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/floatbutdelete"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="52dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="22dp"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--app:backgroundTint="@android:color/holo_orange_dark"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/floatbutedit"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:srcCompat="@drawable/calbut"-->
+        <!--tools:ignore="MissingConstraints" />-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/floatbutedit"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="52dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="22dp"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--app:backgroundTint="@android:color/holo_orange_dark"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/floatbutcreate"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:srcCompat="@drawable/calbut"-->
+        <!--tools:ignore="MissingConstraints" />-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/floatbutcreate"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="52dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="22dp"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--app:backgroundTint="@android:color/holo_orange_dark"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/floatbutmain"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:srcCompat="@drawable/calbut"-->
+        <!--tools:ignore="MissingConstraints" />-->
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/actionMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu_openDirection="up">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/moveActionbut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_label="Move"
+            app:fab_size="mini"
+            android:src="@drawable/ic_arrow_forward_white_24dp"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/editActionbut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_label="Edit"
+            app:fab_size="mini"
+            android:src="@drawable/ic_edit_white_24dp"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/createActionBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_label="Create"
+            app:fab_size="mini"
+            android:src="@drawable/ic_add_white_24dp"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+
+</android.support.constraint.ConstraintLayout>
