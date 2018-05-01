@@ -3,12 +3,14 @@ package cwk2.appointments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.telecom.Call;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,11 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -32,6 +37,7 @@ import android.widget.TimePicker;
 import com.github.clans.fab.FloatingActionMenu;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -43,6 +49,7 @@ public class CalendarActivity extends AppCompatActivity {
     private CalendarView calendarview;
     private Toolbar toolbar;
     private LinearLayout mainLayout;
+    private ListView listView;
 
     private FloatingActionMenu floatingActionMenu;
     private com.github.clans.fab.FloatingActionButton create, edit, move, delete;
@@ -51,11 +58,13 @@ public class CalendarActivity extends AppCompatActivity {
     private EditText detailsAppointment;
 
     private TimePicker timePicker1;
-
+    int count=0;
     // Create function
     String titleUserInput, detailsUserInput, timeUserInput, dateUserInput;
 
     SQLHelper sqlHelper;
+
+    ArrayAdapter<String> theList;
 
     String getTitle, getDate, getTime = "0";
 
@@ -86,10 +95,8 @@ public class CalendarActivity extends AppCompatActivity {
 
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         dateUserInput = df.format(c);
+        Log.d("FIRST DATE : ", dateUserInput);
 
-//        containerLayout = new LinearLayout(this);
-//        mainLayout = new LinearLayout(this);
-//        popUpWindow = new PopupWindow(this);
         //======================================================================
 
         calendarview.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -137,7 +144,7 @@ public class CalendarActivity extends AppCompatActivity {
                         //get values from views and pass to sqlite.
                         if(titleUserInput.equals("") ||detailsUserInput.equals("") ||timeUserInput.equals("")){
 
-                            Toast.makeText(CalendarActivity.this, "Please fill all details.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CalendarActivity.this, "Appointment NOT created. Please fill all details.", Toast.LENGTH_SHORT).show();
                         }
                         if(!duplicateEntry()){
                             Toast.makeText(CalendarActivity.this, titleUserInput+" Already Exists", Toast.LENGTH_SHORT).show();
@@ -148,6 +155,8 @@ public class CalendarActivity extends AppCompatActivity {
                             //ready to store in sqlite.
                             sqlHelper.insert(titleUserInput,detailsUserInput, timeUserInput, dateUserInput);
                             Toast.makeText(CalendarActivity.this, "Data store successfully.", Toast.LENGTH_SHORT).show();
+
+                            count++;
                         }
 
 
@@ -163,6 +172,22 @@ public class CalendarActivity extends AppCompatActivity {
                 Dialog dialog= alertBuilder.create();
                 dialog.show();
 
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CalendarActivity.this, ViewEditActivity.class).putExtra("DateFromPrevious",dateUserInput);
+                startActivity(intent);
+            }
+        });
+
+        move.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CalendarActivity.this, MoveActivity.class).putExtra("DateFromPrevious",dateUserInput);
+                startActivity(intent);
             }
         });
 
@@ -228,37 +253,59 @@ public class CalendarActivity extends AppCompatActivity {
 
                 break;
             case R.id.delete:
-                View inflator = (LayoutInflater.from(CalendarActivity.this)).inflate(R.layout.dialog_delete,null);
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(CalendarActivity.this);
-                alertBuilder.setView(inflator);
-
-                alertBuilder.setCancelable(true).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (sqlHelper.rowCheck(dateUserInput)==0) {
-                            Toast.makeText(CalendarActivity.this, "No Appointments to be deleted", Toast.LENGTH_SHORT).show();
-                        }else {
-                            sqlHelper.deleteRow(dateUserInput);
-                        }
-
-                    }
-                });
-                alertBuilder.setCancelable(true).setNegativeButton("Select Appointment", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                alertBuilder.setCancelable(true).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                Dialog dialog= alertBuilder.create();
-                dialog.setTitle("Do you want to delete all appointments?");
-                dialog.show();
-
+                Intent intent = new Intent(CalendarActivity.this, DeleteActivity.class).putExtra("DateFromPrevious",dateUserInput);
+                startActivity(intent);
+//                final View inflator = (LayoutInflater.from(CalendarActivity.this)).inflate(R.layout.dialog_delete_selected,null);
+//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(CalendarActivity.this);
+//                listView = (ListView) findViewById(R.id.listview);
+//                alertBuilder.setView(inflator);
+//
+//
+//                sqlHelper = new SQLHelper(CalendarActivity.this);
+//
+//                ArrayList<String> theList = new ArrayList<>();
+//                Cursor data = sqlHelper.getAllListContent();
+//                theList.add(data.getString(1));
+//                theList.add(data.getString(2));
+//                theList.add(data.getString(3));
+//                ListAdapter listAdapter = new ArrayAdapter<>(CalendarActivity.this,android.R.layout.simple_list_item_1,theList);
+//                listView.setAdapter(listAdapter);
+//
+//                alertBuilder.setCancelable(true).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//
+//                    }
+//                });
+//
+//
+//                alertBuilder.setCancelable(true).setNegativeButton("Delete All", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if(count>0){
+//                            if (sqlHelper.rowCheck(dateUserInput)==0) {
+//                                Toast.makeText(CalendarActivity.this, "No Appointments to be deleted", Toast.LENGTH_SHORT).show();
+//                            }else {
+//                                sqlHelper.deleteRow(dateUserInput);
+//                                Toast.makeText(CalendarActivity.this, "All Appointments deleted", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }else{
+//                            Toast.makeText(CalendarActivity.this, "No Appointments to be deleted", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
+//                });
+//                alertBuilder.setCancelable(true).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
+//                Dialog dialog= alertBuilder.create();
+//                dialog.setTitle("Do you want to delete all appointments?");
+//                dialog.show();
                 break;
 
         }

@@ -16,7 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Demo"></activity>
+        <activity android:name=".Demo" />
+        <activity android:name=".DeleteActivity" />
+        <activity android:name=".ViewEditActivity" />
+        <activity android:name=".MoveActivity" />
+        <activity android:name=".movePopup"></activity>
     </application>
 
 </manifest>
