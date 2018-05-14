@@ -40,7 +40,7 @@ public class DeleteActivity extends AppCompatActivity {
         }else{
             while(data.moveToNext()){
                 String listItem;
-                listItem = data.getString(2)+"  "+data.getString(0)+"  "+data.getString(1);
+                listItem = data.getString(2)+" | "+data.getString(0)+" \n "+data.getString(1);
 
                 theList.add(listItem);
                 ListAdapter listAdapter = new ArrayAdapter<>(this,android.R.layout.simple_expandable_list_item_1,theList);
@@ -52,6 +52,8 @@ public class DeleteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 myDB.deleteData(dateSlected);
+                finish();
+                startActivity(getIntent());
             }
         });
 
@@ -60,6 +62,8 @@ public class DeleteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String titleInput = titleUserInput.getText().toString();
                 myDB.deleteRow(titleInput);
+                finish();
+                startActivity(getIntent());
 
             }
         });

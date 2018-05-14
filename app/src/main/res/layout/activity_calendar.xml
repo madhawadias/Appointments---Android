@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".CalendarActivity">
 
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -16,11 +17,13 @@
 
     </android.support.v7.widget.Toolbar>
 
+
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -34,6 +37,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu_openDirection="up">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/searchActionBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_label="Search"
+            app:fab_size="mini"
+            android:src="@drawable/ic_search_white_24dp"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/moveActionbut"

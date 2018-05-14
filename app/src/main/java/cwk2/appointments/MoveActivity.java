@@ -40,9 +40,9 @@ public class MoveActivity extends AppCompatActivity {
         final String dateSelected2= getIntent().getStringExtra("DateFromPrevious");
 
         Button move = (Button)findViewById(R.id.movebut);
-        final EditText titleEditMove = (EditText) findViewById(R.id.titleEditMove);
-        titleMove = String.valueOf(titleEditMove.getText());
-        Log.d("TITLE VALUUUUUEEE : ", titleMove);
+        final EditText titleEditMove =  findViewById(R.id.titleEditMove);
+
+//        Log.d("TITLE VALUUUUUEEE : ", titleMove);
 
         ListView listView = (ListView) findViewById(R.id.listviewMove);
         myDB = new SQLHelper(this);
@@ -55,7 +55,7 @@ public class MoveActivity extends AppCompatActivity {
         }else{
             while(data.moveToNext()){
                 String listItemOne;
-                listItemOne = data.getString(2)+"  "+data.getString(0)+"  "+data.getString(1);
+                listItemOne = data.getString(2)+" | "+data.getString(0)+" \n "+data.getString(1);
 
                 list.add(listItemOne);
                 ListAdapter listAdapter = new ArrayAdapter<>(MoveActivity.this,android.R.layout.simple_expandable_list_item_1,list);
@@ -67,12 +67,13 @@ public class MoveActivity extends AppCompatActivity {
         move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                titleMove = titleEditMove.getText().toString();
                 View inflator = (LayoutInflater.from(MoveActivity.this)).inflate(R.layout.dialog_move,null);
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MoveActivity.this);
                 alertBuilder.setView(inflator);
 
                 //======================Dialog Box Layout===============================
-                CalendarView calendarView = (CalendarView)inflator.findViewById(R.id.calendarViewMove);
+                calendarView = (CalendarView)inflator.findViewById(R.id.calendarViewMove);
                 calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -91,19 +92,6 @@ public class MoveActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-//                        titleUserInput = titleAppointment.getText().toString();
-//                        Log.d("TITLE USER INPUT", titleUserInput);
-//                        detailsUserInput = detailsAppointment.getText().toString();
-//                        Log.d("DETAILS USER INPUT", detailsUserInput);
-//                        int hour = timePicker1.getCurrentHour();
-//                        Log.d("HOUR : ", String.valueOf(hour));
-//                        int min = timePicker1.getCurrentMinute();
-//                        Log.d("MINUTE : ", String.valueOf(min));
-//                        timeUserInput = String.valueOf(hour)+":"+String.valueOf(min);
-
-                        //Deleting record from database
-//                        myDB.deleteRow(titleUserInput);
-
                         //=========== Database =============
 
                         myDB = new SQLHelper(MoveActivity.this);
@@ -119,13 +107,16 @@ public class MoveActivity extends AppCompatActivity {
 //                            titleAppointment.setText("");
 //                        }
                         else{
-
+                            Log.d("SELECTED TITLE : ", titleMove);
                             //ready to store in sqlite.
                             myDB.updateMove(titleMove, dateInDialog);
-                            Toast.makeText(MoveActivity.this, "Data store successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MoveActivity.this, "Data moved successfully.", Toast.LENGTH_SHORT).show();
 
                             count++;
                         }
+
+                        finish();
+                        startActivity(getIntent());
 
 
                     }

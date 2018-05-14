@@ -51,7 +51,7 @@ public class ViewEditActivity extends AppCompatActivity {
         }else{
             while(data.moveToNext()){
                 String listItemOne;
-                listItemOne = data.getString(2)+"  "+data.getString(0)+"  "+data.getString(1);
+                listItemOne = data.getString(2)+" | "+data.getString(0)+" \n "+data.getString(1);
 
                 list.add(listItemOne);
                 ListAdapter listAdapter = new ArrayAdapter<>(ViewEditActivity.this,android.R.layout.simple_expandable_list_item_1,list);
@@ -116,6 +116,9 @@ public class ViewEditActivity extends AppCompatActivity {
 
                             count++;
                         }
+
+                        finish();
+                        startActivity(getIntent());
 
 
                     }

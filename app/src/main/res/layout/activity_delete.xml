@@ -22,7 +22,9 @@
         android:layout_marginTop="101dp"
         android:text="Delete All"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listviewDelete" />
+        app:layout_constraintTop_toBottomOf="@+id/listviewDelete"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"/>
 
     <Button
         android:id="@+id/deleteBut"
@@ -32,7 +34,9 @@
         android:layout_marginTop="101dp"
         android:text="Delete"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listviewDelete" />
+        app:layout_constraintTop_toBottomOf="@+id/listviewDelete"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"/>
 
     <EditText
         android:id="@+id/titleuserinput"

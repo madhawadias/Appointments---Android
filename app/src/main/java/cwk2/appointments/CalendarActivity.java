@@ -3,34 +3,23 @@ package cwk2.appointments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
-import android.telecom.Call;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.Scroller;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TimePicker;
 
@@ -50,23 +39,21 @@ public class CalendarActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private LinearLayout mainLayout;
     private ListView listView;
-
     private FloatingActionMenu floatingActionMenu;
-    private com.github.clans.fab.FloatingActionButton create, edit, move, delete;
-
+    private com.github.clans.fab.FloatingActionButton create, edit, move, delete, search;
     private EditText titleAppointment;
     private EditText detailsAppointment;
-
+    private EditText thesaurus;
     private TimePicker timePicker1;
+    private Button thesBut, selectedTextBut;
     int count=0;
     // Create function
     String titleUserInput, detailsUserInput, timeUserInput, dateUserInput;
-
     SQLHelper sqlHelper;
-
     ArrayAdapter<String> theList;
-
+    ArrayList<String> arrayList;
     String getTitle, getDate, getTime = "0";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +67,18 @@ public class CalendarActivity extends AppCompatActivity {
         toolbar.setTitle("Appointments");
         toolbar.setTitleTextColor(WHITE);
         //======================================================================
+        // Items Related to the Floating Action Menu
+        //======================================================================
         floatingActionMenu = (FloatingActionMenu)findViewById(R.id.actionMenu);
         create = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.createActionBut);
         edit = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.editActionbut);
         move = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.moveActionbut);
         delete = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.delete);
+        search = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.searchActionBut);
+
         //======================================================================
 //        Button enterCreate = (Button)findViewById(R.id.enterBut);
+        arrayList = new ArrayList<>();
 
         //======================================================================
           //Initializing the date
@@ -107,6 +99,8 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+
+
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +108,31 @@ public class CalendarActivity extends AppCompatActivity {
                 View inflator = (LayoutInflater.from(CalendarActivity.this)).inflate(R.layout.dialog_create,null);
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(CalendarActivity.this);
                 alertBuilder.setView(inflator);
+                thesBut = (Button) inflator.findViewById(R.id.Thesbutton);
+                selectedTextBut = (Button) inflator.findViewById(R.id.selectTextBut);
+                thesaurus = (EditText) inflator.findViewById(R.id.thesaurusText);
+
+
+                selectedTextBut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditText et=(EditText)findViewById(R.id.detailsEdit);
+
+                        int startSelection=et.getSelectionStart();
+                        int endSelection=et.getSelectionEnd();
+                        final String selectedText = et.getText().toString().substring(startSelection, endSelection);
+                        Intent intent = new Intent(CalendarActivity.this, ThesaurusActivity.class).putExtra("thesText",selectedText);
+                        startActivity(intent);
+                    }
+                });
+
+                thesBut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CalendarActivity.this, ThesaurusActivity.class).putExtra("thesText",thesaurus.getText().toString());
+                        startActivity(intent);
+                    }
+                });
 
                 //======================Dialog Box Layout===============================
                 titleAppointment = (EditText)inflator.findViewById(R.id.titleEdit);
@@ -152,6 +171,8 @@ public class CalendarActivity extends AppCompatActivity {
                         }
                         else{
 
+                            arrayList.add(titleUserInput+" || "+detailsUserInput);
+                            Log.d("ARRAY LIST : ", arrayList.toString());
                             //ready to store in sqlite.
                             sqlHelper.insert(titleUserInput,detailsUserInput, timeUserInput, dateUserInput);
                             Toast.makeText(CalendarActivity.this, "Data store successfully.", Toast.LENGTH_SHORT).show();
@@ -182,7 +203,6 @@ public class CalendarActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,37 +210,17 @@ public class CalendarActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CalendarActivity.this, SearchActivity.class).putExtra("mylist",arrayList);
+                startActivity(intent);
+            }
+        });
 
-
-
-//        mainFloatBut = (FloatingActionButton)findViewById(R.id.floatbutmain);
-//        createFloatBut = (FloatingActionButton)findViewById(R.id.floatbutcreate);
-//        editFloatbut = (FloatingActionButton)findViewById(R.id.floatbutedit);
-//        deleteFloatbut = (FloatingActionButton)findViewById(R.id.floatbutdelete);
-//        moveFloatBut = (FloatingActionButton)findViewById(R.id.floatbutmove);
-//        searchFloatBut = (FloatingActionButton)findViewById(R.id.floatbutsearch);
-
-//        mainFloatBut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isOpen){
-//                    createFloatBut.setClickable(false);
-//                    editFloatbut.setClickable(false);
-//                    deleteFloatbut.setClickable(false);
-//                    moveFloatBut.setClickable(false);
-//                    searchFloatBut.setClickable(false);
-//
-//                }else{
-//                    createFloatBut.setClickable(true);
-//                    editFloatbut.setClickable(true);
-//                    deleteFloatbut.setClickable(true);
-//                    moveFloatBut.setClickable(true);
-//                    searchFloatBut.setClickable(true);
-//                }
-//            }
-//        });
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -229,6 +229,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 Toast.makeText(CalendarActivity.this, "Action Expanded", Toast.LENGTH_SHORT).show();
+
                 return true;
             }
 
@@ -244,6 +245,7 @@ public class CalendarActivity extends AppCompatActivity {
         return true;
     }
 
+    //Method called when items in the action bar are selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -320,6 +322,12 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
     }
+
+    public ArrayList<String> getList() {
+        return arrayList;
+    }
+
+
 
 
 
